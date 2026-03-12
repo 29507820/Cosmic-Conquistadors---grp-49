@@ -1,7 +1,6 @@
-====================================
+=
         GITHUB TERMINOLOGY
-====================================
-
+=
 (for if you're new to this stuff like me)
 
 - Pull: Update Locally Saved Code on YOUR LAPTOP
