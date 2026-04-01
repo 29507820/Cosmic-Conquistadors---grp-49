@@ -10,11 +10,21 @@
 - Rollback: Undo Changes and Restore an older version of the shared file, in case someone messes something up
 
 In Powershell: (Assuming you have the repository cloned on your computer and are currently in the folder)
-Pull        - git pull
-(open the file and make your changes)
-(make sure files run before adding them back to repository pls)
-Commit      - git checkout main
-              git add .
-              git commit -m "any comments on what you've changed"
+- Pull        > git pull
+- (open the file as usual and make your changes)
+- (make sure files run before adding them back to repository pls)
+  
+- Commit      > git checkout main
+              > git add .
+              > git commit -m "any comments on what you've changed"
+  
+- Push        > git push
+  
+
+
+
+
+
+
               
-Push        - git push
+
