@@ -22,11 +22,13 @@ class Shooter:
             self.x += 10
     
     def rotate_left(self):
-        self.angle += 5
+        if self.angle < 180:
+            self.angle += 5
 
     def rotate_right(self):
-        self.angle -= 5
-
+        if self.angle > 0:
+            self.angle -= 5
+    
     def draw(self):
         stddraw.setPenColor(stddraw.YELLOW)
         stddraw.filledCircle(self.x, self.y, PLAYER_RADIUS)
