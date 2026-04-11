@@ -50,8 +50,7 @@ def beginGame(Player_x) -> None:
         #clear screen
         stddraw.clear(stddraw.GRAY)
         #place/move player
-        player.x = Player_x
-        player.draw()
+        #player.x = Player_x
 
         if stddraw.hasNextKeyTyped(): #check if user input anything
             kbinput = stddraw.nextKeyTyped() #read input
@@ -70,18 +69,13 @@ def beginGame(Player_x) -> None:
                 move_left = False
                 move_right = False
 
-        #update player position if possible
-        if (Player_x + PLAYER_RADIUS + 10 > 300):
-            move_right = False
-        if (Player_x - PLAYER_RADIUS - 10 < -300):
-            move_left = False
-
         if (move_right):
-            Player_x += 2
+            player.move_right()
         if (move_left):
-            Player_x -= 2
+            player.move_left()
 
-        stddraw.show(0)
+        player.draw()
+        stddraw.show(50)
 
 #------------------------
 # D Williams 29507820
