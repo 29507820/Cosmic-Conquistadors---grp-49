@@ -1,4 +1,5 @@
 import sys, stdio, stddraw #Type: ignore
+from shooter import Shooter
 
 #globals
 PLAYER_RADIUS = 25
@@ -42,13 +43,15 @@ def beginGame(Player_x) -> None:
     #set both moovement checks to false
     move_right = False
     move_left = False
+    player = Shooter(Player_x, PLAYER_Y)
     
     while GameOn:
 
         #clear screen
         stddraw.clear(stddraw.GRAY)
         #place/move player
-        movePlayer(Player_x,PLAYER_Y)
+        player.x = Player_x
+        player.draw()
 
         if stddraw.hasNextKeyTyped(): #check if user input anything
             kbinput = stddraw.nextKeyTyped() #read input
