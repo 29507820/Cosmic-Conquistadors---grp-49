@@ -68,6 +68,10 @@ def beginGame(Player_x) -> None:
             if (kbinput == "s"):
                 move_left = False
                 move_right = False
+            if (kbinput == "q"):
+                player.rotate_left()
+            if (kbinput == "e"):
+                player.rotate_right()
 
         if (move_right):
             player.move_right()

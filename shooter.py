@@ -1,4 +1,5 @@
-import stddraw  
+import stddraw
+import math
 
 
 PLAYER_RADIUS = 25
@@ -10,7 +11,8 @@ class Shooter:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-    
+        self.angle = 90
+
     def move_left(self):
         if self.x - 10 - PLAYER_RADIUS >= -300:
             self.x -= 10
@@ -19,14 +21,26 @@ class Shooter:
         if self.x + 10 + PLAYER_RADIUS <= 300:
             self.x += 10
     
+    def rotate_left(self):
+        self.angle += 5
+
+    def rotate_right(self):
+        self.angle -= 5
+
     def draw(self):
         stddraw.setPenColor(stddraw.YELLOW)
         stddraw.filledCircle(self.x, self.y, PLAYER_RADIUS)
 
         stddraw.setPenColor(stddraw.GREEN)
-        stddraw.filledRectangle(
-            self.x - (TURRET_WIDTH / 2),
-            self.y,
-            TURRET_WIDTH,
-            TURRET_HEIGHT
-        )
+
+        for i in range(-2, 3):
+            offset_x = i * math.cos(math.radians(self.angle + 90))
+            offset_y = i * math.sin(math.radians(self.angle + 90))
+
+            start_x = self.x + offset_x
+            start_y = self.y + offset_y
+
+            end_x = start_x + TURRET_HEIGHT * math.cos(math.radians(self.angle))
+            end_y = start_y + TURRET_HEIGHT * math.sin(math.radians(self.angle))
+
+            stddraw.line(start_x, start_y, end_x, end_y)
