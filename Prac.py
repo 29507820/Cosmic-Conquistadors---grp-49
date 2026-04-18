@@ -1,5 +1,6 @@
 import sys, stdio, stdarray, stddraw #Type: ignore
 from shooter import Shooter
+from missile import Missile
 
 #globals and constants
 
@@ -84,6 +85,8 @@ def showPauseMenu():
 #------------------------
 def beginGame():
     
+    score = 0
+
     GameOn = True
     #set both movement checks to false
     move_right = False
@@ -103,6 +106,7 @@ def beginGame():
     pos = start_positions(rows, cols)
 
     player = Shooter(Player_x, PLAYER_Y)
+    missiles = []    
     
     while GameOn:
 
@@ -137,7 +141,10 @@ def beginGame():
             if (kbinput == "w"):
                 rotate_right = False
                 rotate_left = False
-               
+            
+            if (kbinput == " "):
+                missiles.append(Missile(player.x, player.y, player.angle))
+
         if (move_right):
             player.move_right()
         if (move_left):
@@ -157,10 +164,39 @@ def beginGame():
         if check_ifwall(pos, vx):
             vx = -vx
             ry -= 45
+        
+        #checking if game is over
+        for i in range(len(pos)):
+            for j in range(len(pos[0])):
+                if pos[i][j] is not None:
+                    enemy_y = ry - i * 45
+                    if enemy_y <= PLAYER_Y:
+                        GameOn = False    
+        #move missiles
+        for missile in missiles:
+            missile.move()
+        
+        #remove missiles goingh off screen
+        missiles[:] = [m for m in missiles if m.y < 400]
+
+        #animate collision between missile and enemy AND update score
+        score += handle_missile_hits(missiles, pos, ry)
+        
+        #animate missiles
+        for missile in missiles:
+            missile.draw()
 
         #animate player
         player.draw()
+        stddraw.setPenColor(stddraw.WHITE)
+        stddraw.text(-250, 350, f"Score: {score}")
         stddraw.show(50)
+
+    stddraw.clear(stddraw.GRAY)
+    stddraw.setPenColor(stddraw.WHITE)
+    stddraw.text(0, 0, "GAME OVER")
+    stddraw.text(0, -50, f"Final Score: {score}")
+    stddraw.show(0)
 
 #------------------------
 # R Evans 28891058
@@ -182,7 +218,8 @@ def update_positions(pos, vx):
     cols = len(pos[0])
     for i in range(0, rows):
         for j in range(0, cols):
-            pos[i][j] += vx
+            if pos[i][j] is not None:
+                pos[i][j] += vx
 
 #------------------------
 # R Evans 28891058
@@ -194,13 +231,50 @@ def check_ifwall(pos, vx):
 # R Evans 28891058
 #------------------------
 def draw_updatedEnemy(pos, ry):
-    stddraw.clear(stddraw.GRAY)
     rows = len(pos)
     cols = len(pos[0])
     for i in range(0, rows):
         for j in range(0, cols):
-            stddraw.filledCircle(pos[i][j], ry - i*45, ENEMY_RADIUS)
-    stddraw.show(0)
+            if pos[i][j] is not None:
+                stddraw.filledCircle(pos[i][j], ry - i*45, ENEMY_RADIUS)
+
+#------------------------
+# J Klagsbrun 29076137
+#------------------------
+def handle_missile_hits(missiles, pos, ry):
+    score_increase = 0
+    rows = len(pos)
+    cols = len(pos[0])
+
+    missiles_to_remove = []
+
+    for missile in missiles:
+        for i in range(rows):
+            for j in range(cols):
+
+                if pos[i][j] is None:
+                    continue
+
+                enemy_x = pos[i][j]
+                enemy_y = ry - i * 45
+
+                dx = missile.x - enemy_x
+                dy = missile.y - enemy_y
+
+                distance_squared = dx * dx + dy * dy
+                
+                #removing hit enemy
+                if distance_squared <= (ENEMY_RADIUS + 5) ** 2:
+                    pos[i][j] = None  
+                    missiles_to_remove.append(missile)
+                    score_increase += 1
+    
+    #removing missiles 
+    for m in missiles_to_remove:
+        if m in missiles:
+            missiles.remove(m)
+
+    return score_increase
 
 def main() -> None:
 
