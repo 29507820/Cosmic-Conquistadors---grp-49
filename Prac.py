@@ -7,6 +7,8 @@ from picture import Picture
 #globals and constants
 
 GameOn = False
+score = 0
+
 
 PLAYER_RADIUS = 25
 PLAYER_Y = -325
@@ -46,6 +48,8 @@ def showInstructions(): #show main menu with instructions
 #------------------------
 def showPauseMenu():
 
+    global GameOn
+
     GamePaused = True 
 
     while GamePaused:
@@ -75,21 +79,53 @@ def showPauseMenu():
                 GamePaused = False
             if (kbinput == "r"):
                 GamePaused = False
-                beginGame()
+                GameOn = False #Closes current game loop
+                GameOn = True
+                beginGame() #Restarts game
             if (kbinput == "x"):
                 GamePaused = False
-                #GameOn = False (Doesn't work will figure it out dw)
-                sys.exit() #close program for now
+                GameOn = False 
 
+#------------------------
+# D Williams 29507820
+#------------------------
+def GameOver():
+    global GameOn, score
+    GameOver = True
+
+    while GameOver:
+        stddraw.clear(stddraw.GRAY)
+        stddraw.setPenColor(stddraw.WHITE)
+
+        stddraw.setFontSize(30)
+        stddraw.text(0, 250, "GAME OVER")
+
+        stddraw.setFontSize(24)
+        stddraw.text(0, 150, f"Final Score: {score}")
+        stddraw.text(0, 100, "[R] RESTART")
+        stddraw.text(0, 50, "[X] QUIT TO MENU")  
+
+        stddraw.show(10)
+
+        if stddraw.hasNextKeyTyped(): #check if user input anything
+            kbinput = stddraw.nextKeyTyped() #read input
+            if (kbinput == "r"):
+                GameOver = False
+                GameOn = True
+                beginGame() #Restarts game
+            if (kbinput == "x"):
+                GameOver = False
+          
 
 #------------------------
 # Everyone
 #------------------------
 def beginGame():
     
-    score = 0
+    global GameOn, score
 
-    GameOn = True
+    score = 0 
+
     #set both movement checks to false
     move_right = False
     move_left = False
@@ -116,9 +152,7 @@ def beginGame():
         #clear screen
         stddraw.clear(stddraw.GRAY)
         stddraw.picture(Picture("background.png"))
-        #stddraw.clear(stddraw.GRAY)
-
-
+        
         # ryley draw enemy pos
         draw_updatedEnemy(arr, rows, cols)
 
@@ -233,12 +267,7 @@ def beginGame():
         stddraw.setPenColor(stddraw.WHITE)
         stddraw.text(-250, 350, f"Score: {score}")
         stddraw.show(30)
-
-    stddraw.clear(stddraw.GRAY)
-    stddraw.setPenColor(stddraw.WHITE)
-    stddraw.text(0, 0, "GAME OVER")
-    stddraw.text(0, -50, f"Final Score: {score}")
-    stddraw.show(0)
+    GameOver()
 
 #-------------------------------------------------------------------------------------------------------
 # RE EVANS 28891058
@@ -402,6 +431,8 @@ def handle_missile_hits(missiles, arr, rows, cols):
 
 def main() -> None:
 
+    global GameOn
+
     # set size and background
     stddraw.setCanvasSize(600, 800)
     stddraw.setXscale(-300, 300)
@@ -420,6 +451,7 @@ def main() -> None:
                 if (kbinput == "x"):
                     sys.exit() #close program
                 else:
+                    GameOn = True
                     beginGame()
                     break
             stddraw.show(10)
