@@ -146,7 +146,11 @@ def beginGame():
 
     player = Shooter(Player_x, PLAYER_Y)
     missiles = []    
-    
+   
+    #cooldown preventing player from spamming missiles
+    cooldown_max = 8
+    cooldown_left = 0
+
     while GameOn:
 
         #clear screen
@@ -183,7 +187,9 @@ def beginGame():
                 rotate_left = False
             
             if (kbinput == " "):
-                missiles.append(Missile(player.x, player.y, player.angle))
+                if cooldown_left == 0:
+                    missiles.append(Missile(player.x, player.y, player.angle))
+                    cooldown_left = cooldown_max
 
         if (move_right):
             player.move_right()
@@ -193,6 +199,8 @@ def beginGame():
             player.rotate_left()
         if (rotate_right):
             player.rotate_right()
+        if cooldown_left > 0:
+            cooldown_left -= 1
 
         #display pause UI
         stddraw.setPenColor(stddraw.WHITE)
@@ -266,6 +274,8 @@ def beginGame():
         player.draw()
         stddraw.setPenColor(stddraw.WHITE)
         stddraw.text(-250, 350, f"Score: {score}")
+        stddraw.text(150, 350, f"Level: {level}")
+        stddraw.text(0, 350, f"Cooldown: {cooldown_left}")
         stddraw.show(30)
     GameOver()
 
