@@ -1,5 +1,6 @@
 import stddraw
 import math
+from picture import Picture
 
 
 PLAYER_RADIUS = 25
@@ -32,7 +33,7 @@ class Shooter:
     def draw(self):
         stddraw.setPenColor(stddraw.YELLOW)
         stddraw.filledCircle(self.x, self.y, PLAYER_RADIUS)
-
+        #stddraw.picture(Picture("player1.png"), self.x, self.y)
         stddraw.setPenColor(stddraw.GREEN)
 
         for i in range(-2, 3):
