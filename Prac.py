@@ -24,21 +24,43 @@ def showInstructions(): #show main menu with instructions
     #clear screen
     stddraw.clear(stddraw.GRAY)
 
-    # Add Text
+    #add Text
     stddraw.setPenColor(stddraw.WHITE)
-
+    stddraw.picture(Picture("background.png"))
+    
     stddraw.setFontSize(42)
     stddraw.text(0, 300, "COSMIC CONQUISTADORS")
+    stddraw.text(0.5, 300, "COSMIC CONQUISTADORS")
+    stddraw.text(0, 300.5, "COSMIC CONQUISTADORS")
 
     stddraw.setFontSize(28)
-    stddraw.text(0, 200, "INSTRUCTIONS:")
+    stddraw.text(0, 250, "INSTRUCTIONS:")
 
     stddraw.setFontSize(24)
+
+    #player 1 controls
+    stddraw.setPenColor(stddraw.GREEN)
+    
+    stddraw.text(0, 200, "PLAYER 1:")
+    stddraw.text(0.5, 200, "PLAYER 1:")
+    stddraw.text(0, 200.5, "PLAYER 1:")
     stddraw.text(0, 150, "[A] Move Left, [S] Stop Moving, [D] Move right")
     stddraw.text(0, 100, "[Q] rotate left, [W] stop rotate, [E] rotate right")
     stddraw.text(0, 50, "[Space] to shoot")
-    stddraw.text(0, -150, "[H] for help")
-    stddraw.text(0, -100, "[X] to quit")
+
+    #player 2 controls
+    stddraw.setPenColor(stddraw.ORANGE)
+    
+    stddraw.text(0, 0, "PLAYER 2:")
+    stddraw.text(0.5, 0, "PLAYER 2:")
+    stddraw.text(0, 0.5, "PLAYER 2:")
+    stddraw.text(0, -40, "[J] left, [K] stop, [L] right")
+    stddraw.text(0, -80, "[U] rotate left, [I] stop rotate, [O] rotate right")
+    stddraw.text(0, -120, "[P] shoot")
+
+    stddraw.setPenColor(stddraw.WHITE)
+    stddraw.text(0, -200, "[H] for help")
+    stddraw.text(0, -250, "[X] to quit")
     stddraw.text(0, -300, "Press any key to start")
     
     stddraw.show(10)
@@ -57,7 +79,7 @@ def showPauseMenu():
         #clear screen       
         stddraw.clear(stddraw.GRAY)
 
-        # Add Text
+        #add Text
         stddraw.setPenColor(stddraw.WHITE)
 
         stddraw.setFontSize(42)
@@ -94,7 +116,7 @@ def GameOver():
     GameOver = True
 
     while GameOver:
-        stddraw.clear(stddraw.GRAY)
+        stddraw.clear(stddraw.RED)
         stddraw.setPenColor(stddraw.WHITE)
 
         stddraw.setFontSize(30)
@@ -126,11 +148,19 @@ def beginGame():
 
     score = 0 
 
-    #set both movement checks to false
-    move_right = False
-    move_left = False
-    rotate_right = False
-    rotate_left = False
+    #set both movement checks to false for both players
+    
+    #player 1 movement
+    p1_move_right = False
+    p1_move_left = False
+    p1_rotate_right = False
+    p1_rotate_left = False
+
+    #player 2 movement
+    p2_move_right = False
+    p2_move_left = False
+    p2_rotate_right = False
+    p2_rotate_left = False
     
     #player begins in middle of screen
     Player_x = 0 
@@ -144,7 +174,8 @@ def beginGame():
     arr = enemyarr(rows, cols, level)
     bombs = []
 
-    player = Shooter(Player_x, PLAYER_Y)
+    player1 = Shooter(-120, PLAYER_Y, stddraw.YELLOW)
+    player2 = Shooter(120, PLAYER_Y, stddraw.CYAN)
     missiles = []    
    
     #cooldown preventing player from spamming missiles
@@ -166,43 +197,80 @@ def beginGame():
             #checking for pause 
             if (kbinput == "\x1b"): #ASCII value for escape key 
                 showPauseMenu()
-            #checking for movement
+            #checking for player 1 movement
             if (kbinput == "a"):
-                move_left = True
-                move_right = False
+                p1_move_left = True
+                p1_move_right = False
             if (kbinput == "d"):
-                move_left = False
-                move_right = True
+                p1_move_left = False
+                p1_move_right = True
             if (kbinput == "s"):
-                move_left = False
-                move_right = False
+                p1_move_left = False
+                p1_move_right = False
             if (kbinput == "q"):
-                rotate_right = False
-                rotate_left = True            
+                p1_rotate_right = False
+                p1_rotate_left = True            
             if (kbinput == "e"):
-                rotate_right = True
-                rotate_left = False
+                p1_rotate_right = True
+                p1_rotate_left = False
             if (kbinput == "w"):
-                rotate_right = False
-                rotate_left = False
-            
+                p1_rotate_right = False
+                p1_rotate_left = False
             if (kbinput == " "):
                 if cooldown_left == 0:
-                    missiles.append(Missile(player.x, player.y, player.angle))
+                    missiles.append(Missile(player1.x, player1.y, player1.angle))
+                    cooldown_left = cooldown_max
+            
+            #checking for player 2 movement
+            if (kbinput == "j"):
+                p2_move_left = True
+                p2_move_right = False
+            if (kbinput == "l"):
+                p2_move_left = False
+                p2_move_right = True
+            if (kbinput == "k"):
+                p2_move_left = False
+                p2_move_right = False
+            if (kbinput == "u"):
+                p2_rotate_right = False
+                p2_rotate_left = True
+            if (kbinput == "o"):
+                p2_rotate_right = True
+                p2_rotate_left = False
+            if (kbinput == "i"):
+                p2_rotate_right = False
+                p2_rotate_left = False
+            if (kbinput == "p"):
+                if cooldown_left == 0:
+                    missiles.append(Missile(player2.x, player2.y, player2.angle))
                     cooldown_left = cooldown_max
 
-        if (move_right):
-            player.move_right()
-        if (move_left):
-            player.move_left()
-        if (rotate_left):
-            player.rotate_left()
-        if (rotate_right):
-            player.rotate_right()
+
+        #move player 1
+        if (p1_move_right):
+            player1.move_right()
+        if (p1_move_left):
+            player1.move_left()
+        if (p1_rotate_left):
+            player1.rotate_left()
+        if (p1_rotate_right):
+            player1.rotate_right()
+        
+        #move player 2
+        if (p2_move_right):
+            player2.move_right()
+        if (p2_move_left):
+            player2.move_left()
+        if (p2_rotate_left):
+            player2.rotate_left()
+        if (p2_rotate_right):
+            player2.rotate_right()
+        
         if cooldown_left > 0:
             cooldown_left -= 1
 
         #display pause UI
+        stddraw.setFontSize(20)
         stddraw.setPenColor(stddraw.WHITE)
         stddraw.text(215, 380, "[ESC] to pause")
 
@@ -270,8 +338,9 @@ def beginGame():
             bomb.move_y()
             bomb.draw()
 
-        #animate player
-        player.draw()
+        #animate players
+        player1.draw()
+        player2.draw()
         stddraw.setPenColor(stddraw.WHITE)
         stddraw.text(-250, 350, f"Score: {score}")
         stddraw.text(150, 350, f"Level: {level}")

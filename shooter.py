@@ -1,19 +1,28 @@
+#----------------------------
+# J Klagsbrun 29076137
+#----------------------------
+
 import stddraw
 import math
 from picture import Picture
 
-
+#defining sizes for turret and player
 PLAYER_RADIUS = 25
 TURRET_WIDTH = 5
 TURRET_HEIGHT = 25
 
 
 class Shooter:
-    def __init__(self, x, y):
+    #storing shooters position
+    def __init__(self, x, y, color=stddraw.YELLOW):
         self.x = x
         self.y = y
-        self.angle = 90
 
+        #initial angle for turret must be 90* pointing straight up
+        self.angle = 90
+        self.color = color
+
+#moving player left and right, making sure it stays within the screen bounds
     def move_left(self):
         if self.x - 10 - PLAYER_RADIUS >= -300:
             self.x -= 10
@@ -21,7 +30,8 @@ class Shooter:
     def move_right(self):
         if self.x + 10 + PLAYER_RADIUS <= 300:
             self.x += 10
-    
+
+#rotating turret: MAX 180* MIN 0*
     def rotate_left(self):
         if self.angle < 180:
             self.angle += 5
@@ -29,19 +39,22 @@ class Shooter:
     def rotate_right(self):
         if self.angle > 0:
             self.angle -= 5
-    
+
+    #drawing shooter
     def draw(self):
-        stddraw.setPenColor(stddraw.YELLOW)
+        stddraw.setPenColor(self.color)
         stddraw.filledCircle(self.x, self.y, PLAYER_RADIUS)
         #stddraw.picture(Picture("player1.png"), self.x, self.y)
         
+        #drawing turret
         stddraw.setPenColor(stddraw.GREEN)
         stddraw.setPenRadius(1)
 
-        #move turret above monkey
+        #move turret above shooter
         base_x = self.x
         base_y = self.y + PLAYER_RADIUS + 2
 
+        #turret endpoint calculations
         end_x = base_x + TURRET_HEIGHT * math.cos(math.radians(self.angle))
         end_y = base_y + TURRET_HEIGHT * math.sin(math.radians(self.angle))
 
