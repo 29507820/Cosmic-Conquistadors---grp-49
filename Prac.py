@@ -1,8 +1,9 @@
-import sys, stdio, stdarray, stddraw, stdrandom #Type: ignore
+import sys, stdio, stdarray, stddraw, stdrandom, stdaudio #Type: ignore
 from shooter import Shooter
 from missile import Missile
 from enemy import Easy, Intermediate, Hard, Vhard, Ehard, Position, Bomb, Bunker
 from picture import Picture
+from soundeffects import Sound
 
 #globals and constants
 
@@ -21,14 +22,12 @@ BUNKER_HALFLENGTH = 70
 # D Williams 29507820
 #------------------------
 def showInstructions(): #show main menu with instructions 
-
     #clear screen
-    stddraw.clear(stddraw.GRAY)
 
-    #add Text
     stddraw.setPenColor(stddraw.WHITE)
     stddraw.picture(Picture("background.png"))
-    
+
+    #add Text 
     stddraw.setFontSize(42)
     stddraw.text(0, 300, "COSMIC CONQUISTADORS")
     stddraw.text(0.5, 300, "COSMIC CONQUISTADORS")
@@ -78,7 +77,8 @@ def showPauseMenu():
     while GamePaused:
 
         #clear screen       
-        stddraw.clear(stddraw.GRAY)
+        stddraw.picture(Picture("background.png"))
+
 
         #add Text
         stddraw.setPenColor(stddraw.WHITE)
@@ -197,7 +197,7 @@ def beginGame():
     while GameOn:
 
         #clear screen
-        stddraw.clear(stddraw.GRAY)
+        #stddraw.clear(stddraw.GRAY)
         stddraw.picture(Picture("background.png"))
         
         #print player hp
@@ -318,6 +318,7 @@ def beginGame():
                     Total_left += 1                     #adds to total if enemies are left
         if Total_left == 0:                             #checks to see if all enemies have been defeated
             level += 1                                  #if true, change level state to next level
+            Sound.playsound('nextlvl')
 
         #creating new enemyarr if level has been incrimented
         if level == 1 and Total_left == 0:                 #increases velocity for level 1

@@ -4,13 +4,14 @@
 
 import stddraw
 import math
+from soundeffects import Sound
 
 #constants controlling missile speed and size
 MISSILE_RADIUS = 5
 MISSILE_SPEED = 10
 
 
-class Missile:
+class Missile(Sound):
 
     #storing missile start pos
     def __init__(self, x, y, angle):
@@ -19,6 +20,9 @@ class Missile:
 
         #storing direction missile is being shot depending on turret angle
         self.angle = angle
+
+        #play shooting sound
+        self.playsound("shoot")
 
     # Update x and y position based on speed and direction
     # cos(angle) controls horizontal movement

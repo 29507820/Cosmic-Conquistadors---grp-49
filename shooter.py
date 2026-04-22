@@ -5,14 +5,14 @@
 import stddraw
 import math
 from picture import Picture
+from soundeffects import Sound
 
 #defining sizes for turret and player
 PLAYER_RADIUS = 25
 TURRET_WIDTH = 5
 TURRET_HEIGHT = 25
 
-
-class Shooter:
+class Shooter(Sound):
     #storing shooters position
     def __init__(self, x, y, hp, color=stddraw.YELLOW):
         self.x = x
@@ -25,7 +25,10 @@ class Shooter:
 
     def damagetaken(self, damage):
         self.hp -= damage
+        self.playsound('hit')
 
+
+        
 #moving player left and right, making sure it stays within the screen bounds
     def move_left(self):
         if self.x - 10 - PLAYER_RADIUS >= -300:
