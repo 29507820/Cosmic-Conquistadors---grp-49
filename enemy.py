@@ -9,7 +9,7 @@ class Bomb:
         self.x = x
         self.y = y
     def move_y(self):
-        self.y -=10
+        self.y -=6
     def draw(self):
         stddraw.setPenColor(stddraw.RED)
         stddraw.filledCircle(self.x, self.y, 5)
