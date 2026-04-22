@@ -1,7 +1,7 @@
 import sys, stdio, stdarray, stddraw, stdrandom #Type: ignore
 from shooter import Shooter
 from missile import Missile
-from enemy import Easy, Intermediate, Hard, Vhard, Ehard, Position, Bomb
+from enemy import Easy, Intermediate, Hard, Vhard, Ehard, Position, Bomb, Bunker
 from picture import Picture
 
 #globals and constants
@@ -15,6 +15,7 @@ PLAYER_Y = -325
 TURRET_WIDTH = 5
 TURRET_HEIGHT = 25
 ENEMY_RADIUS = 15
+BUNKER_HALFLENGTH = 70
 
 #------------------------
 # D Williams 29507820
@@ -149,6 +150,11 @@ def beginGame():
     score = 0 
 
     #set both movement checks to false for both players
+
+    stddraw.setPenColor(stddraw.BLUE)
+    stddraw.rectangle(-225, -150, 70, 20)
+
+
     
     #player 1 movement
     p1_move_right = False
@@ -173,9 +179,15 @@ def beginGame():
     level = 1
     arr = enemyarr(rows, cols, level)
     bombs = []
+#    bunker1 = Bunker(-220, 2)
+#    bunker2 = Bunker(-100, 2)
+#    bunker3 = Bunker(20, 2)
+#    bunker4 = Bunker(140, 2)
+#    bunkers = [bunker1, bunker2, bunker3, bunker4]
 
-    player1 = Shooter(-120, PLAYER_Y, stddraw.YELLOW)
-    player2 = Shooter(120, PLAYER_Y, stddraw.CYAN)
+
+    player1 = Shooter(-120, PLAYER_Y, 3, stddraw.YELLOW)
+    player2 = Shooter(120, PLAYER_Y, 3, stddraw.CYAN)
     missiles = []    
    
     #cooldown preventing player from spamming missiles
@@ -188,8 +200,12 @@ def beginGame():
         stddraw.clear(stddraw.GRAY)
         stddraw.picture(Picture("background.png"))
         
+        #print player hp
+        print_Playerhp(player1, player2)
+
         # ryley draw enemy pos
         draw_updatedEnemy(arr, rows, cols)
+
 
         if stddraw.hasNextKeyTyped(): #check if user input anything
             kbinput = stddraw.nextKeyTyped() #read input
@@ -337,6 +353,18 @@ def beginGame():
         for bomb in bombs:
             bomb.move_y()
             bomb.draw()
+        #potentially damage players from bombs
+        player_hit(player1, player2, bombs)
+        if player1.hp == 0 or player2.hp == 0:
+            GameOn = False
+        #bunkers
+#        bunker_spawn(bunkers, level)
+#        bunker_hit(bombs, bunkers)
+#        for b in bunkers:
+#            if b.hp != 0 and b.state == True:
+#                stddraw.setPenColor(stddraw.BLUE)
+#                stddraw.filledRectangle(b.x, -220, 70, 20)
+               
 
         #animate players
         player1.draw()
@@ -458,7 +486,7 @@ def draw_updatedEnemy(arr, rows, cols):
 
 def bomb_drop(arr, rows, cols, level):
     bombs = []
-    if level >= 1:
+    if level >= 2:
         for i in range(0, rows):
             for j in range(0, cols):
                 p2 = stdrandom.uniformFloat(0, 1)
@@ -468,6 +496,61 @@ def bomb_drop(arr, rows, cols, level):
                     bombs.append(Bomb(bomb_x, bomb_y))
     return bombs
 
+#-------------
+#checks if bomb hit player
+
+def player_hit(player1, player2, bombs):
+    for bomb in bombs[:]:
+        if ((bomb.x <= player1.x+PLAYER_RADIUS and bomb.x >= player1.x-PLAYER_RADIUS) and (bomb.y <= player1.y+PLAYER_RADIUS and bomb.y >= player1.y-PLAYER_RADIUS)):
+            player1.damagetaken(1)
+            bombs.remove(bomb)
+        elif ((bomb.x <= player2.x+PLAYER_RADIUS and bomb.x >= player2.x-PLAYER_RADIUS) and (bomb.y <= player2.y+PLAYER_RADIUS and bomb.y >= player2.y-PLAYER_RADIUS)):
+            player2.damagetaken(1)
+            bombs.remove(bomb)
+
+#prints player hp
+def print_Playerhp(player1, player2):
+    stddraw.setPenColor(stddraw.RED)
+    if player1.hp == 1:
+        stddraw.filledCircle(-185, 358, 5)
+    if player1.hp == 2:
+        stddraw.filledCircle(-185, 358, 5)
+        stddraw.filledCircle(-170, 358, 5)
+    if player1.hp == 3:
+        stddraw.filledCircle(-185, 358, 5)
+        stddraw.filledCircle(-170, 358, 5)
+        stddraw.filledCircle(-155, 358, 5)
+
+    stddraw.setPenColor(stddraw.BLUE)
+    if player2.hp == 1:
+        stddraw.filledCircle(-185, 342, 5)
+    if player2.hp == 2:
+        stddraw.filledCircle(-185, 342, 5)
+        stddraw.filledCircle(-170, 342, 5)
+    if player2.hp == 3:
+        stddraw.filledCircle(-185, 342, 5)
+        stddraw.filledCircle(-170, 342, 5)
+        stddraw.filledCircle(-155, 342, 5)
+
+#randomly spawns a player bunker
+#def bunker_spawn(bunkers, level):
+#    if level >= 2:
+#        p = stdrandom.uniformFloat(0, 1)
+#        if p<=0.01:
+#            remaining_bunkers = [b for b in bunkers if b.hp != 0]
+#            if remaining_bunkers:
+#                p2 = stdrandom.uniformInt(0, len(remaining_bunkers))
+#                b = remaining_bunkers[p2]
+#                b.state = True
+
+#def bunker_hit(bombs, bunkers):
+#    for bomb in bombs[:]:
+#        for bunker in bunkers:
+#            if ((bomb.x <= bunker.x+BUNKER_HALFLENGTH and bomb.x >= bunker.x-BUNKER_HALFLENGTH) and (bomb.y <= -200 and bomb.y >= -240)):
+#                bunker.damagetaken(1)
+#                bombs.remove(bomb)
+
+        
 #-----------------------------------------------------------------------------------------------------------
 # J Klagsbrun 29076137
 #------------------------
