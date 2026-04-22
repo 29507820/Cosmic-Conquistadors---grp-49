@@ -14,13 +14,17 @@ TURRET_HEIGHT = 25
 
 class Shooter:
     #storing shooters position
-    def __init__(self, x, y, color=stddraw.YELLOW):
+    def __init__(self, x, y, hp, color=stddraw.YELLOW):
         self.x = x
         self.y = y
+        self.hp = hp
 
         #initial angle for turret must be 90* pointing straight up
         self.angle = 90
         self.color = color
+
+    def damagetaken(self, damage):
+        self.hp -= damage
 
 #moving player left and right, making sure it stays within the screen bounds
     def move_left(self):
@@ -30,6 +34,20 @@ class Shooter:
     def move_right(self):
         if self.x + 10 + PLAYER_RADIUS <= 300:
             self.x += 10
+
+#prints shooter health
+    def print_Playerhp(self):
+        stddraw.setPenColor(stddraw.RED)
+        if self.hp == 1:
+            stddraw.filledCircle(-185, y, 5)
+        if self.hp == 2:
+            stddraw.filledCircle(-185, y, 5)
+            stddraw.filledCircle(-170, y, 5)
+        if self.hp == 3:
+            stddraw.filledCircle(-185, y, 5)
+            stddraw.filledCircle(-170, y, 5)
+            stddraw.filledCircle(-155, y, 5)
+
 
 #rotating turret: MAX 180* MIN 0*
     def rotate_left(self):
@@ -61,3 +79,8 @@ class Shooter:
         stddraw.line(base_x, base_y, end_x, end_y)
 
         stddraw.setPenRadius()
+
+
+
+
+

@@ -9,10 +9,10 @@ class Bomb:
         self.x = x
         self.y = y
     def move_y(self):
-        self.y -=6
+        self.y -=7
     def draw(self):
-        stddraw.setPenColor(stddraw.RED)
-        stddraw.filledCircle(self.x, self.y, 5)
+        stddraw.setPenColor(stddraw.GREEN)
+        stddraw.filledCircle(self.x, self.y, 10)
 
 class Enemy:
     def __init__(self, enemyType, damage, hp, position):
@@ -27,6 +27,14 @@ class Position:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+
+class Bunker():
+    def __init__(self, x, hp):
+        self.x = x
+        self.hp = hp
+        self.state = False
+    def damagetaken(self, damage):
+        self.hp -= damage
 
 
 class Easy(Enemy):
