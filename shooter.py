@@ -21,7 +21,6 @@ class Shooter(Sound):
 
         #initial angle for turret must be 90* pointing straight up
         self.angle = 90
-        #self.color = color
 
     def damagetaken(self, damage):
         self.hp -= damage
@@ -62,9 +61,7 @@ class Shooter(Sound):
             self.angle -= 5
 
     #drawing shooter
-    def draw(self, num):
-        # stddraw.setPenColor(self.color)
-        # stddraw.filledCircle(self.x, self.y, PLAYER_RADIUS)
+    def draw(self, num): 
         stddraw.picture(Picture(f"player{num}.png"), self.x, self.y)
         
         #drawing turret

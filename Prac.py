@@ -79,7 +79,6 @@ def showPauseMenu():
         #clear screen       
         stddraw.picture(Picture("background.png"))
 
-
         #add Text
         stddraw.setPenColor(stddraw.WHITE)
 
@@ -112,7 +111,7 @@ def showPauseMenu():
 #------------------------
 # D Williams 29507820
 #------------------------
-def Leaderboard(Name): # update and show leaderboard
+def Leaderboard(Name): # update and show leaderboard, return array of top scores
    
     global score
 
@@ -132,6 +131,7 @@ def Leaderboard(Name): # update and show leaderboard
 
     scoreboard.sort(key=lambda x: int(x[1]), reverse=True)
 
+    #write new scores to file
     file = open("Scores.txt", "w")
     for k in range(5):
         file.write(f"{scoreboard[k][0]}#{scoreboard[k][1]}\n")
@@ -226,12 +226,6 @@ def beginGame():
     level = 1
     arr = enemyarr(rows, cols, level)
     bombs = []
-#    bunker1 = Bunker(-220, 2)
-#    bunker2 = Bunker(-100, 2)
-#    bunker3 = Bunker(20, 2)
-#    bunker4 = Bunker(140, 2)
-#    bunkers = [bunker1, bunker2, bunker3, bunker4]
-
 
     player1 = Shooter(-120, PLAYER_Y, 3)
     player2 = Shooter(120, PLAYER_Y, 3)
@@ -244,7 +238,6 @@ def beginGame():
     while GameOn:
 
         #clear screen
-        #stddraw.clear(stddraw.GRAY)
         stddraw.picture(Picture("background.png"))
         
         #print player hp
@@ -405,15 +398,6 @@ def beginGame():
         player_hit(player1, player2, bombs)
         if player1.hp == 0 or player2.hp == 0:
             GameOn = False
-        #bunkers
-#        bunker_spawn(bunkers, level)
-#        bunker_hit(bombs, bunkers)
-#        for b in bunkers:
-#            if b.hp != 0 and b.state == True:
-#                stddraw.setPenColor(stddraw.BLUE)
-#                stddraw.filledRectangle(b.x, -220, 70, 20)
-               
-
         #animate players
         player1.draw(1)
         player2.draw(2)
@@ -580,25 +564,6 @@ def print_Playerhp(player1, player2):
         stddraw.filledCircle(-170, 342, 5)
         stddraw.filledCircle(-155, 342, 5)
 
-#randomly spawns a player bunker
-#def bunker_spawn(bunkers, level):
-#    if level >= 2:
-#        p = stdrandom.uniformFloat(0, 1)
-#        if p<=0.01:
-#            remaining_bunkers = [b for b in bunkers if b.hp != 0]
-#            if remaining_bunkers:
-#                p2 = stdrandom.uniformInt(0, len(remaining_bunkers))
-#                b = remaining_bunkers[p2]
-#                b.state = True
-
-#def bunker_hit(bombs, bunkers):
-#    for bomb in bombs[:]:
-#        for bunker in bunkers:
-#            if ((bomb.x <= bunker.x+BUNKER_HALFLENGTH and bomb.x >= bunker.x-BUNKER_HALFLENGTH) and (bomb.y <= -200 and bomb.y >= -240)):
-#                bunker.damagetaken(1)
-#                bombs.remove(bomb)
-
-        
 #-----------------------------------------------------------------------------------------------------------
 # J Klagsbrun 29076137
 #------------------------
