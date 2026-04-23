@@ -8,20 +8,20 @@ from picture import Picture
 from soundeffects import Sound
 
 #defining sizes for turret and player
-PLAYER_RADIUS = 25
+PLAYER_RADIUS = 35
 TURRET_WIDTH = 5
 TURRET_HEIGHT = 25
 
 class Shooter(Sound):
     #storing shooters position
-    def __init__(self, x, y, hp, color=stddraw.YELLOW):
+    def __init__(self, x, y, hp):
         self.x = x
         self.y = y
         self.hp = hp
 
         #initial angle for turret must be 90* pointing straight up
         self.angle = 90
-        self.color = color
+        #self.color = color
 
     def damagetaken(self, damage):
         self.hp -= damage
@@ -62,10 +62,10 @@ class Shooter(Sound):
             self.angle -= 5
 
     #drawing shooter
-    def draw(self):
-        stddraw.setPenColor(self.color)
-        stddraw.filledCircle(self.x, self.y, PLAYER_RADIUS)
-        #stddraw.picture(Picture("player1.png"), self.x, self.y)
+    def draw(self, num):
+        # stddraw.setPenColor(self.color)
+        # stddraw.filledCircle(self.x, self.y, PLAYER_RADIUS)
+        stddraw.picture(Picture(f"player{num}.png"), self.x, self.y)
         
         #drawing turret
         stddraw.setPenColor(stddraw.GREEN)

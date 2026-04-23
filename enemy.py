@@ -11,7 +11,7 @@ class Bomb:
     def move_y(self):
         self.y -=7
     def draw(self):
-        stddraw.setPenColor(stddraw.GREEN)
+        stddraw.setPenColor(stddraw.RED)
         stddraw.filledCircle(self.x, self.y, 10)
 
 class Enemy:

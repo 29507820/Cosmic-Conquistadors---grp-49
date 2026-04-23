@@ -4,6 +4,7 @@
 
 import stddraw
 import math
+from picture import Picture
 from soundeffects import Sound
 
 #constants controlling missile speed and size
@@ -32,5 +33,6 @@ class Missile(Sound):
         self.y += MISSILE_SPEED * math.sin(math.radians(self.angle))
 
     def draw(self):
-        stddraw.setPenColor(stddraw.RED)
-        stddraw.filledCircle(self.x, self.y, MISSILE_RADIUS)
+        #stddraw.setPenColor(stddraw.RED)
+        #stddraw.filledCircle(self.x, self.y, MISSILE_RADIUS)
+        stddraw.picture(Picture("banan.png"), self.x, self.y)

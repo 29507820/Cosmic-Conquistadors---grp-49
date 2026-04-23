@@ -112,24 +112,71 @@ def showPauseMenu():
 #------------------------
 # D Williams 29507820
 #------------------------
+def Leaderboard(Name): # update and show leaderboard
+   
+    global score
+
+    scoreboard = [["", "0"] for i in range(7)]   
+
+    #get old scores
+    file = open("Scores.txt")
+    for i in range(5):
+        entry = file.readline().strip()
+        if "#" in entry:
+            entry = entry.split("#")
+            scoreboard[i] = [entry[0], entry[1]] 
+    file.close()
+
+    #putting current score into bottom of array
+    scoreboard[5] = [Name, str(score)]
+
+    scoreboard.sort(key=lambda x: int(x[1]), reverse=True)
+
+    file = open("Scores.txt", "w")
+    for k in range(5):
+        file.write(f"{scoreboard[k][0]}#{scoreboard[k][1]}\n")
+        
+    file.close()
+
+    
+    return scoreboard
+
+#------------------------
+# D Williams 29507820
+#------------------------
 def GameOver():
     global GameOn, score
     GameOver = True
 
+    stddraw.clear(stddraw.RED)
+    stddraw.setPenColor(stddraw.WHITE)
+
+    stddraw.text(0, 250, "Please enter name on command line")
+
+    stddraw.show(10)
+
+    Nametag = input("Enter your name: ") or "John" #take in username, returns John if no name entered
+
+    Highscores = Leaderboard(Nametag)
+
     while GameOver:
+
         stddraw.clear(stddraw.RED)
         stddraw.setPenColor(stddraw.WHITE)
 
         stddraw.setFontSize(30)
-        stddraw.text(0, 250, "GAME OVER")
+        stddraw.text(0, 275, "GAME OVER")
 
         stddraw.setFontSize(24)
-        stddraw.text(0, 150, f"Final Score: {score}")
-        stddraw.text(0, 100, "[R] RESTART")
-        stddraw.text(0, 50, "[X] QUIT TO MENU")  
+        stddraw.text(0, 225, f"Final Score: {score}")
+        for i in range(5):
+            stddraw.text(0, 200 - (25*(i+1)), f"{Highscores[i][0]}: {Highscores[i][1]} pnts")
+
+        stddraw.text(0, 0, "[R] RESTART")
+        stddraw.text(0, -50, "[X] QUIT TO MENU")  
 
         stddraw.show(10)
-
+ 
         if stddraw.hasNextKeyTyped(): #check if user input anything
             kbinput = stddraw.nextKeyTyped() #read input
             if (kbinput == "r"):
@@ -186,8 +233,8 @@ def beginGame():
 #    bunkers = [bunker1, bunker2, bunker3, bunker4]
 
 
-    player1 = Shooter(-120, PLAYER_Y, 3, stddraw.YELLOW)
-    player2 = Shooter(120, PLAYER_Y, 3, stddraw.CYAN)
+    player1 = Shooter(-120, PLAYER_Y, 3)
+    player2 = Shooter(120, PLAYER_Y, 3)
     missiles = []    
    
     #cooldown preventing player from spamming missiles
@@ -368,8 +415,8 @@ def beginGame():
                
 
         #animate players
-        player1.draw()
-        player2.draw()
+        player1.draw(1)
+        player2.draw(2)
         stddraw.setPenColor(stddraw.WHITE)
         stddraw.text(-250, 350, f"Score: {score}")
         stddraw.text(150, 350, f"Level: {level}")
