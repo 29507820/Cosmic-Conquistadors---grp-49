@@ -34,3 +34,4 @@ class Missile(Sound):
 
     def draw(self): 
         stddraw.picture(Picture("banan.png"), self.x, self.y)
+

@@ -1,9 +1,12 @@
-import stdarray
-import stdio
-import sys
-import math
-import stddraw
+import stdio # type: ignore
+import stddraw # type: ignore
 
+#-----------------
+#RE 28891058
+#-----------------
+#Subclass structure
+#https://stackoverflow.com/questions/1607612/python-how-do-i-make-a-subclass-from-a-superclass 
+#bomb class for storing and changing positions 
 class Bomb:
     def __init__(self, x, y):
         self.x = x
@@ -14,47 +17,38 @@ class Bomb:
         stddraw.setPenColor(stddraw.RED)
         stddraw.filledCircle(self.x, self.y, 10)
 
+#enemy class for storing enemytype, hp and positions
 class Enemy:
-    def __init__(self, enemyType, damage, hp, position):
+    def __init__(self, enemyType, hp, position):
         self.hp = hp
         self.enemyType = enemyType
-        self.damage = damage
         self.position = position
-    def damagetaken(self, damage):
-        self.hp -= damage
 
+#class store enemy positions
 class Position:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
-class Bunker():
-    def __init__(self, x, hp):
-        self.x = x
-        self.hp = hp
-        self.state = False
-    def damagetaken(self, damage):
-        self.hp -= damage
-
-
+#different subclasses that pass through main class defining enemies
 class Easy(Enemy):
     def __init__(self, x, y):
-        Enemy.__init__(self, "easy", 1, 1, Position(x, y))
+        Enemy.__init__(self, "easy", 1, Position(x, y))
 
 class Intermediate(Enemy):
     def __init__(self, x, y):
-        Enemy.__init__(self, "intermedite", 1, 2, Position(x, y))
+        Enemy.__init__(self, "intermedite", 2, Position(x, y))
 
 class Hard(Enemy):
     def __init__(self, x, y):
-        Enemy.__init__(self, "hard", 1, 3, Position(x, y))
+        Enemy.__init__(self, "hard", 3, Position(x, y))
 
 class Vhard(Enemy):
     def __init__(self, x, y):
-        Enemy.__init__(self, "vhard", 1, 4, Position(x, y))
+        Enemy.__init__(self, "vhard", 4, Position(x, y))
 
 class Ehard(Enemy):
     def __init__(self, x, y):
-        Enemy.__init__(self, "ehard", 1, 5, Position(x, y))
+        Enemy.__init__(self, "ehard", 5, Position(x, y))
 
 
