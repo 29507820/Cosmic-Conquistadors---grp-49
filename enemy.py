@@ -1,7 +1,5 @@
-import stdarray
-import stdio
-import sys
-import stddraw
+import stdio # type: ignore
+import stddraw # type: ignore
 
 #-----------------
 #RE 28891058
