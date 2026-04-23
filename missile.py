@@ -8,7 +8,7 @@ from soundeffects import Sound
 
 #constants controlling missile speed and size
 MISSILE_RADIUS = 5
-MISSILE_SPEED = 10
+MISSILE_SPEED = 14
 
 
 class Missile(Sound):
