@@ -1,7 +1,7 @@
 import sys, stdio, stdarray, stddraw, stdrandom, stdaudio #Type: ignore
 from shooter import Shooter
 from missile import Missile
-from enemy import Easy, Intermediate, Hard, Vhard, Ehard, Position, Bomb, Bunker
+from enemy import Easy, Intermediate, Hard, Vhard, Ehard, Position, Bomb
 from picture import Picture
 from soundeffects import Sound
 
@@ -171,19 +171,13 @@ def beginGame():
     #player begins in middle of screen
     Player_x = 0 
 
-    #ryley creating enemy grid
+    #ryley creating enemy grid, starting velocity, starting height, bombs list
     rows = 3
     cols = 5
     vx = 3
-    startT = 380 -45
     level = 1
     arr = enemyarr(rows, cols, level)
     bombs = []
-#    bunker1 = Bunker(-220, 2)
-#    bunker2 = Bunker(-100, 2)
-#    bunker3 = Bunker(20, 2)
-#    bunker4 = Bunker(140, 2)
-#    bunkers = [bunker1, bunker2, bunker3, bunker4]
 
 
     player1 = Shooter(-120, PLAYER_Y, 3, stddraw.YELLOW)
@@ -191,7 +185,7 @@ def beginGame():
     missiles = []    
    
     #cooldown preventing player from spamming missiles
-    cooldown_max = 8
+    cooldown_max = 6
     cooldown_left = 0
 
     while GameOn:
@@ -203,7 +197,7 @@ def beginGame():
         #print player hp
         print_Playerhp(player1, player2)
 
-        # ryley draw enemy pos
+        #RE draw enemy pos
         draw_updatedEnemy(arr, rows, cols)
 
 
@@ -292,7 +286,7 @@ def beginGame():
 
         #------------------------------------------------------------------------------------------
         #RE animates enemies and checks if they have reached the edge of the screen, bouncing them
-        Total_left = 0                             #intitialize new variable to see amount of enemies left
+        Total_left = 0                             
         update_positions(arr, rows, cols, vx)
         rightmost, leftmost = check_wall(arr, rows, cols)
         vx = bounce(arr, rows, cols, vx, rightmost, leftmost)
@@ -311,28 +305,28 @@ def beginGame():
         # RE EVANS 28891058
         #-------------------------------------------------------------------------------------------------------
         #check if all enemies have been defeated
-        #Total_left = 0                                  #Creating variable to count enemies left
+        #Total_left = 0                              
         for i in range(len(arr)):
             for j in range(len(arr[0])):
                 if arr[i][j] is not None:
                     Total_left += 1                     #adds to total if enemies are left
-        if Total_left == 0:                             #checks to see if all enemies have been defeated
+        if Total_left == 0:                             
             level += 1                                  #if true, change level state to next level
             Sound.playsound('nextlvl')
 
-        #creating new enemyarr if level has been incrimented
-        if level == 1 and Total_left == 0:                 #increases velocity for level 1
-            vx = abs(vx) + 2
-        if level == 2 and Total_left == 0:                 #will update to level 2 if there are no enemies left
-            vx = abs(vx) + 1                               #increases velocity for l2 and promps new enemy grid
+        #creating new enemyarr if level has been incrimented/ increasing velocity
+        if level == 1 and Total_left == 0:                 
+            vx = abs(vx) + 1
+        if level == 2 and Total_left == 0:                 
+            vx = abs(vx) + 1                              
             arr = enemyarr(rows, cols, level)
-        if level == 3 and Total_left == 0:                 #same procedure as level 2
-            vx = abs(vx) + 1                               #increases velocity and promps new enemy grid
+        if level == 3 and Total_left == 0:                
+            vx = abs(vx) + 1                              
             arr = enemyarr(rows, cols, level)
-        if level == 4 and Total_left == 0:                 #same procedure as level 2
+        if level == 4 and Total_left == 0:                 
             vx = abs(vx) + 1 
             arr = enemyarr(rows, cols, level)
-        if level == 5 and Total_left == 0:                 #same procedure as level 2
+        if level == 5 and Total_left == 0:                 
             arr = enemyarr(rows, cols, level)
         #-----------------------------------------------------------------------------------------------------
 
@@ -349,23 +343,17 @@ def beginGame():
         #animate missiles
         for missile in missiles:
             missile.draw()
-        #animate bombs
+
+        #RE animate bombs
         bombs.extend(bomb_drop(arr, rows, cols, level))
         for bomb in bombs:
             bomb.move_y()
             bomb.draw()
-        #potentially damage players from bombs
+
+        #RE potentially damage players from bombs
         player_hit(player1, player2, bombs)
         if player1.hp == 0 or player2.hp == 0:
-            GameOn = False
-        #bunkers
-#        bunker_spawn(bunkers, level)
-#        bunker_hit(bombs, bunkers)
-#        for b in bunkers:
-#            if b.hp != 0 and b.state == True:
-#                stddraw.setPenColor(stddraw.BLUE)
-#                stddraw.filledRectangle(b.x, -220, 70, 20)
-               
+            GameOn = False               
 
         #animate players
         player1.draw()
@@ -383,107 +371,101 @@ def beginGame():
 #This function creates an array of enemies, including different types.
 
 def enemyarr(rows, cols, level):
-    x = -200                                             #starting x pos
-    y = 300                                              #starting y pos
-    move_X = 40                                          #move_X and move_Y represent the distance between the enemies 
+    x = -200                                            
+    y = 300                                             
+    move_X = 40                                          #represent the distance between the enemies 
     move_Y = 40
-    arr = stdarray.create2D(rows, cols, None)            #creating 2d array to store enemies 
+    arr = stdarray.create2D(rows, cols, None)            
     for i in range(0, rows):                             
         for j in range(0, cols):
-            p = stdrandom.uniformFloat(0, 1)             #generating random float between 0 and 1 ro use as a probability
+            p = stdrandom.uniformFloat(0, 1)             
             if level == 1:
-                arr[i][j] = Easy(x, y)                   #creating new easu enemy at positions xy and storing it at array index
-            elif level == 2:                             #if level 2, continues to fill enemy grid with around 60% intermediate enemies
+                arr[i][j] = Easy(x, y)                   
+            elif level == 2:                             
                 if p>=0.4:                               
-                    arr[i][j] = Intermediate(x, y)       #if p>=0.5 then fill that index in the array with an intermediate enemy 
+                    arr[i][j] = Intermediate(x, y)       
                 elif p<0.4:                         
-                    arr[i][j] = Easy(x, y)               #if p<0.5 then fill with easy enemies
-            elif level == 3:                             #functionally the same as level 2 except now it includes Hard enemies
+                    arr[i][j] = Easy(x, y)              
+            elif level == 3:                            
                 if p>=0.5:
                     arr[i][j] = Hard(x, y)               
                 elif 0.15<=p<0.5:
                     arr[i][j] = Intermediate(x, y)
                 elif p<0.15:
-                    arr[i][j] = Easy(x, y)
-            elif level == 4:                             #functionally the same as level 2 except now it includes Hard enemies
+                     arr[i][j] = Easy(x, y)
+            elif level == 4:                             
                 if p>=0.5:
                     arr[i][j] = Vhard(x, y)               
                 elif 0.15<=p<0.5:
                     arr[i][j] = Hard(x, y)
                 elif p<0.15:
                     arr[i][j] = Intermediate(x, y)
-            elif level == 5:                             #if level 2, continues to fill enemy grid with around 60% intermediate enemies
+            elif level == 5:                             
                 if p>=0.4:                               
-                    arr[i][j] = Ehard(x, y)       #if p>=0.5 then fill that index in the array with an intermediate enemy 
+                    arr[i][j] = Ehard(x, y)       
                 elif p<0.4:                         
-                    arr[i][j] = Vhard(x, y)               #if p<0.5 then fill with easy enemies
-            x += move_X                                  #shifting x in row
-        y -= move_Y                                      #shifting y in col
+                    arr[i][j] = Vhard(x, y)              
+            x += move_X                          #shifting x/y position in row/col
+        y -= move_Y                                      
         x -= move_X*cols                                 #returning to origional x after each row
     return arr
 
 #----------------
-#update_positions/ Takes enemy array, dimentions and velocity as arguments
+#updates the position by adding the velocity to each element remaining 
 
 def update_positions(arr, rows, cols, vx):              
     for i in range(0, rows):
         for j in range(0, cols):
             if arr[i][j] is not None:
-                arr[i][j].position.x += vx               #increases all elements x position by the velocity in the x direction
+                arr[i][j].position.x += vx               
 
 #---------------
 #check ifwall/ takes enemy array and dimentions as arguments
 
 def check_wall(arr, rows, cols):
-    rightmost = -10000                                   #abitrary large/ small values so that our position is never greater
-    leftmost = 10000                                     #this just makes it so that the first check where posX is greater/ smaller ->
-    for i in range(0, rows):                             #-> than an arbitrarily small/ large number is always true
+    rightmost = -300                                   #abitrary large/ small values so that our position is never greater and will equal positionX
+    leftmost = 300                                     
+    for i in range(0, rows):                             
         for j in range(0, cols):
-            if arr[i][j] is not None:                    #true only for remaining enemies 
-                positionX = arr[i][j].position.x         #holds x position of enemy           
+            if arr[i][j] is not None:                    
+                positionX = arr[i][j].position.x                   
                 if positionX > rightmost:                #looking for the remaining enemy closest to the right in the array
                     rightmost = positionX
                 if positionX < leftmost:                 #looking for closest to left
                     leftmost = positionX
-    return rightmost, leftmost                           #values used to see when to bounce off of the wall
+    return rightmost, leftmost                           
 
 #------------------------------------------
 #changes the direction if there is a wall
 
 def bounce(arr, rows, cols, vx, rightmost, leftmost):                   
-    if leftmost-ENEMY_RADIUS<=-300 or rightmost+ENEMY_RADIUS>=300:             #seeing if either end touches a wall
-        vx = -vx                                         #if so changes direction
+    if leftmost-ENEMY_RADIUS<=-300 or rightmost+ENEMY_RADIUS>=300:             #checks if either end touches a wall
+        vx = -vx                                        
         for i in range(0, rows):
             for j in range(0, cols):
                 if arr[i][j] is not None:
-                    arr[i][j].position.y -= 45           #after bouncing it also decreases all elements y value
+                    arr[i][j].position.y -= 45           #after bouncing it decreases all elements y value
     return vx
 
 #-------------------------
-#draws the updated enemy
+#draws the updated enemy and is dependant on enemy hp
 
 def draw_updatedEnemy(arr, rows, cols):
     for i in range(0, rows):
         for j in range(0, cols):
             if arr[i][j] is not None and arr[i][j].hp == 1:
                 stddraw.picture(Picture("enemy1.png"), arr[i][j].position.x, arr[i][j].position.y)
-                #stddraw.setPenColor(stddraw.YELLOW)
-                #stddraw.filledCircle(arr[i][j].position.x, arr[i][j].position.y, ENEMY_RADIUS) #draws enemy
             elif arr[i][j] is not None and arr[i][j].hp == 2:
                 stddraw.picture(Picture("enemy2.png"), arr[i][j].position.x, arr[i][j].position.y)
-                #stddraw.setPenColor(stddraw.ORANGE)
-                #stddraw.filledCircle(arr[i][j].position.x, arr[i][j].position.y, ENEMY_RADIUS) #draws enemy
             elif arr[i][j] is not None and arr[i][j].hp == 3:
                 stddraw.picture(Picture("enemy3.png"), arr[i][j].position.x, arr[i][j].position.y)
-                #stddraw.setPenColor(stddraw.RED)
-                #stddraw.filledCircle(arr[i][j].position.x, arr[i][j].position.y, ENEMY_RADIUS) #draws enemy
             elif arr[i][j] is not None and arr[i][j].hp == 4:
                 stddraw.picture(Picture("enemy4.png"), arr[i][j].position.x, arr[i][j].position.y)
             elif arr[i][j] is not None and arr[i][j].hp == 5:
                 stddraw.picture(Picture("enemy5.png"), arr[i][j].position.x, arr[i][j].position.y)
 
 #------------
-#drops bomb
+#drops bomb from random enemy if level >=2
 
 def bomb_drop(arr, rows, cols, level):
     bombs = []
@@ -503,7 +485,7 @@ def bomb_drop(arr, rows, cols, level):
 def player_hit(player1, player2, bombs):
     for bomb in bombs[:]:
         if ((bomb.x <= player1.x+PLAYER_RADIUS and bomb.x >= player1.x-PLAYER_RADIUS) and (bomb.y <= player1.y+PLAYER_RADIUS and bomb.y >= player1.y-PLAYER_RADIUS)):
-            player1.damagetaken(1)
+            player1.damagetaken(1)         #passes 1 damage to damage function in class
             bombs.remove(bomb)
         elif ((bomb.x <= player2.x+PLAYER_RADIUS and bomb.x >= player2.x-PLAYER_RADIUS) and (bomb.y <= player2.y+PLAYER_RADIUS and bomb.y >= player2.y-PLAYER_RADIUS)):
             player2.damagetaken(1)
@@ -532,24 +514,6 @@ def print_Playerhp(player1, player2):
         stddraw.filledCircle(-185, 342, 5)
         stddraw.filledCircle(-170, 342, 5)
         stddraw.filledCircle(-155, 342, 5)
-
-#randomly spawns a player bunker
-#def bunker_spawn(bunkers, level):
-#    if level >= 2:
-#        p = stdrandom.uniformFloat(0, 1)
-#        if p<=0.01:
-#            remaining_bunkers = [b for b in bunkers if b.hp != 0]
-#            if remaining_bunkers:
-#                p2 = stdrandom.uniformInt(0, len(remaining_bunkers))
-#                b = remaining_bunkers[p2]
-#                b.state = True
-
-#def bunker_hit(bombs, bunkers):
-#    for bomb in bombs[:]:
-#        for bunker in bunkers:
-#            if ((bomb.x <= bunker.x+BUNKER_HALFLENGTH and bomb.x >= bunker.x-BUNKER_HALFLENGTH) and (bomb.y <= -200 and bomb.y >= -240)):
-#                bunker.damagetaken(1)
-#                bombs.remove(bomb)
 
         
 #-----------------------------------------------------------------------------------------------------------
