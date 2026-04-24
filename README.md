@@ -49,6 +49,10 @@ Project code written:
 * Implemented player movement controls and prevented players from moving off the screen
 * created soundeffects.py which uses threding to play sound without freezing the main project's functions
 * helped with implementation of various graphical improvements over the base game
+\---
+Consulted sources:
+* https://www.w3schools.com/python/
+* https://realpython.com/intro-to-python-threading/
 * All audio files sourced from https://pixabay.com/
 * Mp3 files converted to .wav using https://cloudconvert.com/mp3-to-wav
 * Audio files trimmed using https://vocalremover.org/cutter
